@@ -21,9 +21,9 @@ export default function Orders() {
     useEffect(() => {
         getOrders(email).then((res) => {
             setOrderdetails(res.data);
-            res.data.forEach((ele) => {
-                setImages(ele.cart);
-            });
+            // res.data.forEach((ele) => {
+            //     setImages(ele.cart);
+            // });
         });
     }, []);
 
@@ -39,7 +39,7 @@ export default function Orders() {
                             }}
                             key={index}
                         >
-                            {images.map((img, index) => {
+                            {orderdetails[index].cart.map((img, index) => {
                                 return (
                                     <Image
                                         src={img.image}

@@ -16,11 +16,17 @@ import {
     faStar,
     faRupeeSign,
 } from "@fortawesome/free-solid-svg-icons";
+import ReactPaginate from "react-paginate";
 
 export default function Products() {
     const [items, setItems] = useState([]);
     const [category, setCategory] = useState([]);
     const [color, setColor] = useState([]);
+
+    const [pagenumber, setPagenumber] = useState(0);
+    const productsPerPage = 3;
+    const pageVisited = pagenumber * productsPerPage;
+    const pageCount = Math.ceil(items.length / productsPerPage);
 
     useEffect(() => {
         getProducts().then((res) => {
@@ -75,6 +81,58 @@ export default function Products() {
             setItems(res.data);
         });
     };
+
+    const handlePageClick = ({ selected }) => {
+        setPagenumber(selected);
+    };
+
+    const displayProducts = items
+        .slice(pageVisited, pageVisited + productsPerPage)
+        .map((value, index) => {
+            return (
+                <Card
+                    style={{
+                        width: "15rem",
+                        margin: "10px",
+                    }}
+                    key={value._id}
+                >
+                    <a href={`/productdetails/${value._id}`}>
+                        <Card.Img
+                            variant="top"
+                            src={value.product_image}
+                            height="250px"
+                        />
+                    </a>
+                    <Card.Body>
+                        <Card.Title>
+                            <a href={`/productdetails/${value._id}`}>
+                                {value.product_name}
+                            </a>
+                        </Card.Title>
+
+                        <Card.Text>
+                            &#8377;
+                            {value.product_cost}
+                        </Card.Text>
+                        <div
+                            style={{
+                                marginLeft: "2.5rem",
+                            }}
+                        >
+                            <ReactStars
+                                count={5}
+                                isHalf={true}
+                                edit={false}
+                                value={value.product_rating}
+                                size={24}
+                                activeColor="#ffd700"
+                            />
+                        </div>
+                    </Card.Body>
+                </Card>
+            );
+        });
 
     return (
         <div>
@@ -164,7 +222,8 @@ export default function Products() {
                                 style={{ justifyContent: "center" }}
                                 className="text-center"
                             >
-                                {items !== null ? (
+                                {displayProducts}
+                                {/* {items !== null ? (
                                     items.map((value, index) => {
                                         return (
                                             <Card
@@ -193,7 +252,6 @@ export default function Products() {
                                                             {value.product_name}
                                                         </a>
                                                     </Card.Title>
-
                                                     <Card.Text>
                                                         &#8377;
                                                         {value.product_cost}
@@ -221,11 +279,25 @@ export default function Products() {
                                     })
                                 ) : (
                                     <p>No Products Found</p>
-                                )}
+                                )} */}
                             </Row>
                             <br />
                         </div>
                     </Col>
+                    <ReactPaginate
+                        breakLabel="..."
+                        previousLabel={"< prev"}
+                        nextLabel={"next >"}
+                        pageCount={pageCount}
+                        onPageChange={handlePageClick}
+                        // pageRangeDisplayed={2}
+                        containerClassName={"paginationBttns"}
+                        previousLinkClassName={"previousBttn"}
+                        nextLinkClassName={"nextBttn"}
+                        disbaledClassName={"paginationDisabled"}
+                        activeClass
+                        // renderOnZeroPageCount={null}
+                    />
                 </Row>
             </Container>
         </div>

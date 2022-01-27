@@ -88,7 +88,7 @@ export default function ChangeForgotPassword() {
                         </Button>
                         &nbsp;&nbsp;&nbsp;
                         <Button
-                            variant="link"
+                            variant="dark"
                             onClick={() => navigate("/login")}
                         >
                             Back
